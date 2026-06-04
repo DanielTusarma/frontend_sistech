@@ -1,5 +1,6 @@
 import { use } from "react";
 import { useNavigate } from "react-router-dom";
+import Layout from "../../components/Layout";
 
 function Dashboard() {
 
@@ -15,7 +16,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="container mt-5">
+    <Layout>
       <h1>Dashboard</h1>
 
       <p>Email: {usuario.email}</p>
@@ -28,7 +29,7 @@ function Dashboard() {
       >
         Cerrar Sesión
       </button>
-    </div>
+    </Layout>
   );
 }
 
