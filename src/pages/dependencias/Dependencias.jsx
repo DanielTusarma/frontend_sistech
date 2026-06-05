@@ -4,6 +4,8 @@ import {
   crearDependencia,
 } from "../../services/dependenciaService";
 import Alert from "../../components/Alert";
+import { obtenerMensajeError } from "../../utils/errorHandler";
+import TablaGenerica from "../../components/TablaGenerica";
 
 function Dependencias() {
   // Estados
@@ -16,6 +18,13 @@ function Dependencias() {
   const [page, setPage] = useState(1);
   const size = 5;
 
+  // nuevos estados para tabla generica
+  const columnasDependencias = [
+    { texto: "ID", alineacion: "text-center", ancho: "20%" },
+    { texto: "Nombre", alineacion: "text-start", ancho: "50%" },
+    { texto: "Activo", alineacion: "text-start", ancho: "30%" }
+  ];
+
   // Carga inicial de dependencias
   useEffect(() => {
     cargarDependencias();
@@ -26,11 +35,8 @@ function Dependencias() {
   // Carga las dependencias desde la API y actualiza el estado
   async function cargarDependencias() {
     try {
-
-      console.log("Página actual en api:", page);
       const datos = await listarDependencias(page, size);
 
-      
       setDependencias(datos);
     } catch (error) {
       console.error(error);
@@ -41,53 +47,27 @@ function Dependencias() {
   async function manejarSubmit(e) {
     e.preventDefault();
 
-    if (!nombre.trim()) {
-      setAlerta({
-        tipo: "danger",
-        mensaje: "El nombre es obligatorio",
-      });
-      return;
-    }
-
-    if (nombre.trim().length < 2) {
-      setAlerta({
-        tipo: "danger",
-        mensaje: "El nombre debe tener al menos 2 caracteres",
-      });
-      return;
-    }
-
-    if (nombre.trim().length > 30) {
-      setAlerta({
-        tipo: "danger",
-        mensaje: "El nombre no puede superar los 30 caracteres",
-      });
-      return;
-    }
-
     try {
       const nuevaDependencia = {
         nombre,
       };
 
-      const respuesta = await crearDependencia(nuevaDependencia);
+      await crearDependencia(nuevaDependencia);
 
-      console.log(respuesta);
+      setNombre("");
+      setAlerta({
+        tipo: "success",
+        mensaje: "Dependencia creada correctamente,",
+      });
 
       await cargarDependencias();
 
-      setNombre("");
-
-      setAlerta({
-        tipo: "success",
-        mensaje: "Dependencia creada correctamente",
-      });
     } catch (error) {
-      console.error(error.response.data);
+      // utilizamos la funcion de obtenerMensajeError
       setAlerta({
         tipo: "danger",
-        mensaje: "Error al crear la dependencia",
-      });
+        mensaje: obtenerMensajeError(error)
+      });     
     }
   }
 
@@ -128,48 +108,73 @@ function Dependencias() {
         </div>
       </div>
 
-      <div className="card shadow-sm">
+      {/* <div className="card shadow-sm">
         <div className="card-body">
-          <table className="table table-striped mb-0">
+          <table className="table table-striped table-hover mb-0">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Activo</th>
+                <th className="text-center" style={{ width: "20%" }}>
+                  ID
+                </th>
+                <th className="text-start" style={{ width: "50% " }}>
+                  Nombre
+                </th>
+                <th className="text-start" style={{ width: "30% " }}>
+                  Activo
+                </th>
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="text-start">
               {dependencias.map((dependencia) => (
                 <tr key={dependencia.id}>
-                  <td>{dependencia.id}</td>
-                  <td>{dependencia.nombre}</td>
-                  <td>{dependencia.activo ? "Sí" : "No"}</td>
+                  <td className="text-center text-muted">{dependencia.id}</td>
+                  <td className="text-start fw-bold">{dependencia.nombre}</td>
+                  <td className="text-start text-secondary">
+                    {dependencia.activo ? "Sí" : "No"}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
 
           <div className="d-flex justify-content-between mt-3">
-            <button
-              className="btn btn-secondary"
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1}
-            >
-              Anterior
-            </button>
+            {page > 1 ? (
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => setPage((prev) => prev - 1, 1)}
+              >
+                Anterior
+              </button>
+            ) : (
+              <div />
+            )}
 
             <span className="align-self-center">Página {page}</span>
 
             <button
               className="btn btn-secondary"
               onClick={() => setPage((prev) => prev + 1)}
+              disabled={dependencias.length < size}
             >
               Siguiente
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
+      <TablaGenerica 
+        columnas={columnasDependencias}
+        datos={dependencias}
+        paginacion={{ page, setPage, size }}
+        renderFila={(dependencia) => (
+          <>
+            <td className="text-center text-muted">{dependencia.id}</td>
+            <td className="text-start fw-bold">{dependencia.nombre}</td>
+            <td className="text-start text-secondary">{dependencia.activo ? "Si" : "No"}</td>
+          </>
+        )}
+      />
+
     </>
   );
 }

@@ -13,9 +13,28 @@ export async function listarDependencias(page = 1, size = 5) {
 
 // Crear una nueva dependencia
 export async function crearDependencia(datos) {
+    const nombreLimpio = datos.nombre?.trim() || "";
+
+    // validaciones
+    if (!nombreLimpio) {
+        throw new Error("El nombre es obligatorio");
+    }
+
+    if (nombreLimpio.length < 2) {
+        throw new Error("El nombre debe tener al menos dos caracteres");
+    }
+    if (nombreLimpio.length > 30) {
+        throw new Error("El nombre no puede superar los 30 caracteres");
+    }
+
+    const dependenciaAEnviar = {
+        nombre: nombreLimpio,
+    };
+
+
     const response = await clienteAxios.post(
         "/dependencias",
-        datos
+        dependenciaAEnviar
     );
 
     return response.data;
