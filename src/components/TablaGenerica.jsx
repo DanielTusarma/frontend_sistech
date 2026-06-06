@@ -1,7 +1,7 @@
 import React from "react";
 
 function TablaGenerica({ columnas, datos, renderFila, paginacion }) {
-  const { page, setPage, size } = paginacion;
+  const { page, setPage, pages, total } = paginacion;
 
   return (
     <div className="card shadow-sm">
@@ -22,10 +22,9 @@ function TablaGenerica({ columnas, datos, renderFila, paginacion }) {
           </thead>
 
           <tbody>
-            {datos.length > 0 ? (
+            {datos && datos.length > 0 ? (
               datos.map((item, index) => (
                 <tr key={item.id || index}>
-                  {/* Aquí delegamos el renderizado de los <td> a la vista padre */}
                   {renderFila(item)}
                 </tr>
               ))
@@ -39,30 +38,33 @@ function TablaGenerica({ columnas, datos, renderFila, paginacion }) {
           </tbody>
         </table>
 
-        {/* Paginación Genérica */}
-        <div className="d-flex justify-content-between mt-3">
-          {page > 1 ? (
+        {/* Paginación Genérica Mejorada*/}
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          {/*Izquierda: Informacion de registros */}
+          <span className="text-muted small">
+            Total de registros: <strong>{total || 0}</strong>
+          </span>
+          {/*Centro: Indicador de paginas*/}
+          <span className="align-self-center fw-medium">
+            Página {page} de {pages || 1}
+          </span>
+          {/*Derecha: Botones de navegación*/}
+          <div className="btn-group">
             <button
-              className="btn btn-outline-secondary"
+              className="btn btn-sm btn-outline-secondary"
               onClick={() => setPage((prev) => prev - 1)}
+              disabled={page <=1} // Deshabilita si esta es la primera página
             >
               Anterior
             </button>
-          ) : (
-            <div />
-          )}
-
-          <span className="align-self-center fw-medium">
-            Página {page}
-          </span>
-
-          <button
-            className="btn btn-secondary"
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={datos.length < size}
-          >
-            Siguiente
-          </button>
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={page >= pages} // Deshabilita si esta es la ultima página
+            >
+              Siguiente
+            </button>
+          </div>
         </div>
       </div>
     </div>

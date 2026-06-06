@@ -6,12 +6,16 @@ import TablaGenerica from "../../components/TablaGenerica";
 
 function Cargos() {
   // Estados
-  const [cargos, setCargos] = useState([]);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [alerta, setAlerta] = useState({
     tipo: "",
     mensaje: "",
+  });
+  const [paginacionData, setPaginacionData] = useState({
+    items: [],
+    total: 0,
+    pages: 1,
   });
   const [page, setPage] = useState(1);
   const size = 5;
@@ -33,9 +37,9 @@ function Cargos() {
   // carga los cargos desde la API y actualiza el estado
   async function cargarCargos() {
     try {
-      const datos = await listarCargos(page, size);
+      const respuesta = await listarCargos(page, size);
 
-      setCargos(datos);
+      setPaginacionData(respuesta);
     } catch (error) {
       console.error(error);
     }
@@ -85,65 +89,16 @@ function Cargos() {
       </div>
 
       <Alert tipo={alerta.tipo} mensaje={alerta.mensaje} />
-      {/* <div className="card shadow-sm">
-        <div className="card-body">
-          <table className="table table-striped table-hover mb-0">
-            <thead>
-              <tr>
-                <th className="text-center" style={{ width: "10%" }}>
-                  ID
-                </th>
-                <th className="text-start" style={{ width: "30%" }}>
-                  Nombre
-                </th>
-                <th className="text-start" style={{ width: "60%" }}>
-                  Descripción
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="text-start">
-              {cargos.map((cargo) => (
-                <tr key={cargo.id}>
-                  <td className="text-center text-muted">{cargo.id}</td>
-                  <td className="text-start fw-bold">{cargo.nombre}</td>
-                  <td className="text-start text-secondary">
-                    {cargo.descripcion}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div className="d-flex justify-content-between mt-3">
-            {page > 1 ? (
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setPage((prev) => prev - 1)}
-              >
-                Anterior
-              </button>
-            ) : (
-              <div />
-            )}
-
-            <span className="align-self-center fw-medium">Página {page}</span>
-
-            <button
-              className="btn btn-secondary"
-              onClick={() => setPage((prev) => prev + 1)}
-              disabled={cargos.length < size}
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
-      </div> */}
 
       <TablaGenerica
         columnas={columnasCargos}
-        datos={cargos}
-        paginacion={{ page, setPage, size }}
+        datos={paginacionData.items}
+        paginacion={{
+          page: page,
+          setPage: setPage,
+          pages: paginacionData.pages,
+          total: paginacionData.total,
+        }}
         renderFila={(cargo) => (
           <>
             <td className="text-center text-muted">{cargo.id}</td>

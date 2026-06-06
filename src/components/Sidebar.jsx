@@ -15,29 +15,29 @@ function Sidebar() {
 
       <ul className="nav flex-column">
 
-        <li className="nav-item">
+        <li className="nav-item text-start">
           <NavLink to="/dashboard" className="nav-link">
             Dashboard
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="nav-item text-start">
           <NavLink to="/empleados" className="nav-link">
             Empleados
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="nav-item text-start">
           <NavLink to="/dependencias" className="nav-link">
             Dependencias
           </NavLink>
         </li>
-        <li className="nav-item">
+        <li className="nav-item text-start">
           <NavLink to="/cargos" className="nav-link">
             Cargos
           </NavLink>
         </li>
 
         {rol === "admin" && (
-          <li className="nav-item">
+          <li className="nav-item text-start">
             <NavLink to="/usuarios" className="nav-link">
               Usuarios
             </NavLink>

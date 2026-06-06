@@ -9,11 +9,15 @@ import TablaGenerica from "../../components/TablaGenerica";
 
 function Dependencias() {
   // Estados
-  const [dependencias, setDependencias] = useState([]);
   const [nombre, setNombre] = useState("");
   const [alerta, setAlerta] = useState({
     tipo: "",
     mensaje: "",
+  });
+  const [paginacionData, setPaginacionData] = useState({
+    items: [],
+    total: 0,
+    pages: 1
   });
   const [page, setPage] = useState(1);
   const size = 5;
@@ -35,9 +39,9 @@ function Dependencias() {
   // Carga las dependencias desde la API y actualiza el estado
   async function cargarDependencias() {
     try {
-      const datos = await listarDependencias(page, size);
+      const respuesta = await listarDependencias(page, size);
 
-      setDependencias(datos);
+      setPaginacionData(respuesta);
     } catch (error) {
       console.error(error);
     }
@@ -108,64 +112,15 @@ function Dependencias() {
         </div>
       </div>
 
-      {/* <div className="card shadow-sm">
-        <div className="card-body">
-          <table className="table table-striped table-hover mb-0">
-            <thead>
-              <tr>
-                <th className="text-center" style={{ width: "20%" }}>
-                  ID
-                </th>
-                <th className="text-start" style={{ width: "50% " }}>
-                  Nombre
-                </th>
-                <th className="text-start" style={{ width: "30% " }}>
-                  Activo
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="text-start">
-              {dependencias.map((dependencia) => (
-                <tr key={dependencia.id}>
-                  <td className="text-center text-muted">{dependencia.id}</td>
-                  <td className="text-start fw-bold">{dependencia.nombre}</td>
-                  <td className="text-start text-secondary">
-                    {dependencia.activo ? "Sí" : "No"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div className="d-flex justify-content-between mt-3">
-            {page > 1 ? (
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setPage((prev) => prev - 1, 1)}
-              >
-                Anterior
-              </button>
-            ) : (
-              <div />
-            )}
-
-            <span className="align-self-center">Página {page}</span>
-
-            <button
-              className="btn btn-secondary"
-              onClick={() => setPage((prev) => prev + 1)}
-              disabled={dependencias.length < size}
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
-      </div> */}
       <TablaGenerica 
         columnas={columnasDependencias}
-        datos={dependencias}
-        paginacion={{ page, setPage, size }}
+        datos={paginacionData.items}
+        paginacion={{
+          page: page,
+          setPage: setPage,
+          pages: paginacionData.pages,
+          total: paginacionData.total,
+        }}       
         renderFila={(dependencia) => (
           <>
             <td className="text-center text-muted">{dependencia.id}</td>
