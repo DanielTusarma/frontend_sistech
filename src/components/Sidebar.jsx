@@ -21,7 +21,7 @@ function Sidebar() {
           </NavLink>
         </li>
         <li className="nav-item text-start">
-          <NavLink to="/empleados" className="nav-link">
+          <NavLink to="/empleados/activos" className="nav-link">
             Empleados
           </NavLink>
         </li>

@@ -22,7 +22,7 @@ function AppRouter() {
                 <Route path="/" element={<PublicRoute><Login /></PublicRoute>} /> {/* Rutas públicas */}
                 <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> {/* Dashboard principal */}
-                <Route path='/empleados' element={<ProtectedRoute><Layout><Empleados /></Layout></ProtectedRoute>} /> {/* Módulo Empleados */}
+                <Route path='/empleados/activos' element={<ProtectedRoute><Layout><Empleados /></Layout></ProtectedRoute>} /> {/* Módulo Empleados */}
                 <Route path='/dependencias' element={<ProtectedRoute><Layout><Dependencias /></Layout></ProtectedRoute>} /> {/* Módulo Dependencias */}
                 <Route path='/cargos' element={<ProtectedRoute><Layout><Cargos /></Layout></ProtectedRoute>} /> {/* Módulo Cargos */}
             </Routes>
