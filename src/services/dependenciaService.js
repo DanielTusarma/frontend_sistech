@@ -39,3 +39,12 @@ export async function crearDependencia(datos) {
 
     return response.data;
 }
+
+// Obtener empleados asociados a una dependencia específica
+export async function listarEmpleadosPorDependencia(dependenciaId, page = 1, size = 5) {
+  // Ajusta la ruta si tu router en FastAPI tiene un prefijo diferente (ej: /dependencias)
+  const respuesta = await clienteAxios.get(`/dependencias/${dependenciaId}/empleados`, {
+    params: { page, size }
+  });
+  return respuesta.data;
+}

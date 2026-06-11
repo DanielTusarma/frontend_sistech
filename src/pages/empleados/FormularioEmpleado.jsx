@@ -1,4 +1,3 @@
-// src/pages/FormularioEmpleado.jsx
 import { useEffect, useState } from "react";
 import { crearEmpleado } from "../../services/empleadoService";
 import { listarCargos } from "../../services/cargoService";
@@ -6,8 +5,8 @@ import { listarDependencias } from "../../services/dependenciaService";
 import Alert from "../../components/Alert";
 import { obtenerMensajeError } from "../../utils/errorHandler";
 
-function FormularioEmpleado({ onEmpleadoGuardado }) {
-  // 1. ESTADOS PROPIOS PARA LOS INPUTS
+function FormularioEmpleado({ onSubmitExitoso, empleadoAEditar }) {
+  // Estados para los campos del formulario
   const [nombres, setNombres] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -17,7 +16,7 @@ function FormularioEmpleado({ onEmpleadoGuardado }) {
   const [cargoId, setCargoId] = useState("");
   const [dependenciaId, setDependenciaId] = useState("");
 
-  // 2. ESTADOS PARA LOS SELECTORS
+  // Estados para los selectores de cargos y dependencias
   const [cargos, setCargos] = useState([]);
   const [dependencias, setDependencias] = useState([]);
   const [alerta, setAlerta] = useState({ tipo: "", mensaje: "" });
@@ -37,10 +36,40 @@ function FormularioEmpleado({ onEmpleadoGuardado }) {
     cargarSelectores();
   }, []);
 
+  // Si se recibe un empleado para editar, carga sus datos en el formulario
+  useEffect(() => {
+    if (empleadoAEditar) {
+      setNombres(empleadoAEditar.nombres || "");
+      setApellidos(empleadoAEditar.apellidos || "");
+      setTelefono(empleadoAEditar.telefono || "");
+      setEmail(empleadoAEditar.email || "");
+      setSalario(empleadoAEditar.salario || "");
+      setFechaIngreso(empleadoAEditar.fecha_ingreso ? empleadoAEditar.fecha_ingreso.substring(0, 10) : "");
+      setCargoId(empleadoAEditar.cargo_id || "");
+      setDependenciaId(empleadoAEditar.dependencia_id || "");
+      setAlerta({ tipo: "", mensaje: "" });
+    } else {
+      limpiarCampos();
+    }
+  }, [empleadoAEditar]);
+
+  // Función para limpiar los campos del formulario (útil para nuevo registro o después de editar)
+  function limpiarCampos() {
+    setNombres("");
+    setApellidos("");
+    setTelefono("");
+    setEmail("");
+    setSalario("");
+    setFechaIngreso("");
+    setCargoId("");
+    setDependenciaId("");
+  }
+
+  // Función para manejar el submit del formulario, tanto para crear como para editar
   async function manejarSubmit(e) {
     e.preventDefault();
     try {
-      const nuevoEmpleado = {
+      const datosEmpleado = {
         nombres,
         apellidos,
         telefono,
@@ -51,24 +80,19 @@ function FormularioEmpleado({ onEmpleadoGuardado }) {
         dependencia_id: Number(dependenciaId),
       };
 
-      await crearEmpleado(nuevoEmpleado);
-
-      // Limpiar el formulario tras guardar con éxito
-      setNombres("");
-      setApellidos("");
-      setTelefono("");
-      setEmail("");
-      setSalario("");
-      setFechaIngreso("");
-      setCargoId("");
-      setDependenciaId("");
-
-      setAlerta({ tipo: "success", mensaje: "Empleado registrado con éxito." });
-
-      // 🌟 LE AVISAMOS AL PADRE: Ejecuta la función que te pasaron por props para refrescar la tabla
-      if (onEmpleadoGuardado) {
-        await onEmpleadoGuardado();
+      if (onSubmitExitoso) {
+        await onSubmitExitoso(datosEmpleado);
       }
+
+      if (!empleadoAEditar) {
+        limpiarCampos();
+      }
+
+      setAlerta({ 
+        tipo: "success", 
+        mensaje: empleadoAEditar ? "Empleado actualizado con éxito." : "Empleado registrado con éxito."
+      });
+
     } catch (error) {
       setAlerta({
         tipo: "danger",
@@ -82,7 +106,9 @@ function FormularioEmpleado({ onEmpleadoGuardado }) {
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title" id="modalEmpleadoLabel">Registrar Nuevo Empleado</h5>
+            <h5 className="modal-title" id="modalEmpleadoLabel">
+              {empleadoAEditar ? "✏️ Editar Empleado" : "Registrar Nuevo Empleado"}
+            </h5>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setAlerta({ tipo: "", mensaje: "" })}></button>
           </div>
           
@@ -143,7 +169,9 @@ function FormularioEmpleado({ onEmpleadoGuardado }) {
 
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setAlerta({ tipo: "", mensaje: "" })}>Cerrar</button>
-              <button type="submit" className="btn btn-primary">Guardar Empleado</button>
+              <button type="submit" className={empleadoAEditar ? "btn btn-warning" : "btn btn-primary"}>
+                {empleadoAEditar ? "Guardar Cambios" : "Guardar Empleado"}
+              </button>
             </div>
           </form>
         </div>

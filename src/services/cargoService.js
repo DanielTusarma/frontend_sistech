@@ -50,4 +50,13 @@ export async function crearCargo(datos) {
 
 } 
 
+// Obtener empleados por cargo
+export async function listarEmpleadosPorCargo(cargoId, page = 1, size = 5) {
+  // Ajusta la ruta si tu router de cargos tiene un prefijo (ej: /cargos)
+  const respuesta = await clienteAxios.get(`/cargos/${cargoId}/empleados`, {
+    params: { page, size }
+  });
+  return respuesta.data;
+}
+
 

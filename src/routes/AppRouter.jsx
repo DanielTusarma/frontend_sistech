@@ -7,6 +7,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import Empleados from '../pages/empleados/Empleados';
 import Dependencias from '../pages/dependencias/Dependencias';
 import Cargos from '../pages/cargos/Cargos';
+import Usuarios from '../pages/usuarios/Usuarios';
 
 // Guards de rutas
 import ProtectedRoute from '../components/ProtectedRoute';
@@ -25,6 +26,7 @@ function AppRouter() {
                 <Route path='/empleados/activos' element={<ProtectedRoute><Layout><Empleados /></Layout></ProtectedRoute>} /> {/* Módulo Empleados */}
                 <Route path='/dependencias' element={<ProtectedRoute><Layout><Dependencias /></Layout></ProtectedRoute>} /> {/* Módulo Dependencias */}
                 <Route path='/cargos' element={<ProtectedRoute><Layout><Cargos /></Layout></ProtectedRoute>} /> {/* Módulo Cargos */}
+                <Route path='/usuarios' element={<ProtectedRoute><Layout><Usuarios /></Layout></ProtectedRoute>} />
             </Routes>
         </BrowserRouter>
 

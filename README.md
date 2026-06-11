@@ -1,6 +1,6 @@
 # Sistema de Gestión Empresarial - Frontend
 
-Frontend desarrollado con React, Vite, React Router, Axios y Bootstrap para consumir una API REST construida con FastAPI.
+Frontend de un Sistema de Gestión Empresarial desarrollado con React, Vite, Axios y Bootstrap. Permite la administración de usuarios, empleados, cargos y permisos mediante integración con una API REST construida en FastAPI, implementando autenticación JWT y control de acceso basado en roles.
 
 ## Tecnologías utilizadas
 
@@ -13,11 +13,25 @@ Frontend desarrollado con React, Vite, React Router, Axios y Bootstrap para cons
 ## Funcionalidades implementadas
 
 * Inicio de sesión con JWT
-* Protección de rutas privadas
-* Protección de rutas públicas
+* Protección de rutas públicas y privadas
 * Gestión de sesión mediante Local Storage
 * Logout
-* Consumo de API REST FastAPI
+* Integración con API REST FastAPI
+* Gestión de usuarios
+* Gestión de empleados
+* Gestión de cargos
+* Gestión de dependencias
+* Paginación de resultados
+* Control de acceso basado en roles (RBAC)
+* Componentes reutilizables
+
+## Capturas de pantalla
+
+### Inicio de Sesión
+![Login](docs/images/login.png)
+
+### Gestión de Empleados
+![Empleados](docs/images/empleados.png)
 
 ## Instalación
 
@@ -58,7 +72,15 @@ src/
 └── assets/
 ```
 
-## Estado actual
+## Estado actual del proyecto
 
 Proyecto en desarrollo.
-Actualmente cuenta con autenticación JWT integrada con FastAPI.
+Actualmente cuenta con autenticación JWT, gestión de empleados e integración completa con la API REST desarrollada en FastAPI.
+
+
+## Próximas funcionalidades
+
+- Gestión de usuarios
+- Gestión de roles y permisos
+- Dashboard administrativo
+- Mejoras en experiencia de usuario

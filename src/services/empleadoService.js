@@ -14,23 +14,23 @@ export async function listarEmpleados(page = 1, size = 5) {
 
 //  Crear un nuevo empleado
 export async function crearEmpleado(dataEmpleado) {
-  // 1. Validar Teléfono (Regex estricto idéntico al backend)
+  // Validar Teléfono (Regex estricto idéntico al backend)
   if (!dataEmpleado.telefono || !/^\+?\d+$/.test(dataEmpleado.telefono)) {
     throw new Error("El teléfono es obligatorio, solo debe contener números y puede iniciar con '+'.");
   }
 
-  // 2. Validar Email (Formato correcto)
+  // Validar Email (Formato correcto)
   const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!dataEmpleado.email || !regexEmail.test(dataEmpleado.email)) {
     throw new Error("El correo electrónico es obligatorio y debe tener un formato válido (ejemplo@dominio.com).");
   }
 
-  // 3. Validar Salario (gt=0)
+  // Validar Salario (gt=0)
   if (!dataEmpleado.salario || Number(dataEmpleado.salario) <= 0) {
     throw new Error("El salario es obligatorio y debe ser un número mayor a 0.");
   }
 
-  // 4. Validar Llaves Foráneas (Que no se queden en "Seleccione una opción")
+  // Validar Llaves Foráneas (Que no se queden en "Seleccione una opción")
   if (!dataEmpleado.cargo_id || dataEmpleado.cargo_id === "") {
     throw new Error("Debe seleccionar un cargo válido para el empleado.");
   }
@@ -69,6 +69,14 @@ export async function editarEmpleado(id, dataEmpleado) {
 export async function desactivarEmpleado(id, fechaSalida) {
   const respuesta = await clienteAxios.patch(`/empleados/${id}/desactivar`, {
     fecha_salida: fechaSalida
+  });
+  return respuesta.data;
+}
+
+// Obtener empleados inactivos con paginación
+export async function listarEmpleadosInactivos(page = 1, size = 5) {
+  const respuesta = await clienteAxios.get("/empleados/inactivos", { 
+    params: { page, size }
   });
   return respuesta.data;
 }
